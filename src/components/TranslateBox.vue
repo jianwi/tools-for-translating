@@ -1,17 +1,29 @@
 <template>
-  <textarea id="input" cols="30" rows="10" :value='text'></textarea>
+  <textarea ref="input" cols="30" rows="10" v-model="ch_text"></textarea>
 </template>
 
 <script lang='ts'>
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 export default defineComponent({
-  props:{
-    text:{
-      type:String
-    }
+  props: {
+    text: {
+      type: String,
+    },
   },
-  setup() {
+  setup(props, { emit }) {
+    const ch_text = computed({
+      get() {
+        return props.text;
+      },
+      set(val: string | undefined) {
+        if (val) {
+          emit("chChange", val);
+        }
+      },
+    });
+
     return {
+      ch_text,
     };
   },
 });

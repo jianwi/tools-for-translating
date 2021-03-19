@@ -5,63 +5,49 @@
       @translateParagraph="handleTranslateParagraph"
       @translateWord="handleTranslateWord"
     />
-    <translate-box :text="paragraph_ch" />
+    <translate-box :text="paragraph_ch" @chChange="handleChChange" />
   </div>
   <stage :text="word_ch" />
 </template>
 <script lang="ts">
-import { defineComponent, ref, watch } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import InputBox from "./components/InputBox.vue";
 import Stage from "./components/Stage.vue";
 import TranslateBox from "./components/TranslateBox.vue";
+import en2ch from "./utils/en2ch";
+import caches from "./utils/caches";
 
 export default defineComponent({
   name: "App",
   setup() {
-    // let en = ref("");
     const paragraph_ch = ref("");
     const word_ch = ref("");
-
-    watch(paragraph_ch, async (str) => {
-      console.log("变化咯", str);
-      word_ch.value = await str;
-    });
+    watch(paragraph_ch,function(val){
+      word_ch.value = val;
+    })
 
     async function handleTranslateParagraph(en: string): Promise<void> {
       paragraph_ch.value = await en2ch(en);
+      caches.setTranslated(paragraph_ch.value)
     }
     async function handleTranslateWord(en_word: string): Promise<void> {
       word_ch.value = await en2ch(en_word);
     }
 
-    async function en2ch(en: string) {
-      let res = "";
-      let req = await fetch("http://f.jialidun.vip/t.php", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `q=${en}`,
-      });
-      if (req.ok) {
-        let text = await req.text();
-        let data_json = JSON.parse(text);
-        console.log(data_json)
-        if (data_json) {
-          for (let r of data_json.trans_result) {
-            res += r.dst + "\n";
-          }
-        }
-      }
-      return res;
+    function handleChChange(val: string) {
+      paragraph_ch.value = val;
+      caches.setTranslated(val)
     }
-
+    
+    onMounted(()=>{
+        paragraph_ch.value = caches.getTranslated()
+    })
     return {
       handleTranslateParagraph,
       paragraph_ch,
       handleTranslateWord,
       word_ch,
+      handleChChange,
     };
   },
   components: {

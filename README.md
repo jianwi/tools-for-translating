@@ -1,5 +1,8 @@
 # translating
 
+## Todo
+储存状态
+
 ## Project setup
 ```
 yarn install

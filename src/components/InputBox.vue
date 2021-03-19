@@ -10,14 +10,13 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, Ref, ref } from "vue";
+import { defineComponent, onMounted, Ref, ref } from "vue";
+import caches from '../utils/caches'; 
+
 export default defineComponent({
   setup(props, { emit }) {
     //   过早优化
     //   growUp when scrollHeight > clientHeight
-
-    // eslint-disable-next-line
-    const input:Ref = ref(null);
 
     function growUp(): void {
       const input_ele: HTMLTextAreaElement|null = input.value;
@@ -25,6 +24,8 @@ export default defineComponent({
         //   input_ele.style.height = input_ele.scrollHeight + 'px';
       }
     }
+    
+    const input:Ref<HTMLTextAreaElement|null> = ref(null);
 
     let id: number | undefined;
     function handleInput(): void {
@@ -37,21 +38,27 @@ export default defineComponent({
         input_ele.value = input_ele.value
           .replace(/-\n/g, "")
           .replace(/\n/g, "")
-          .replace(/\./g, ".\n");
-        emit("translateParagraph", input.value.value);
-      }, 800);
+          .replace(/(?<!\d)\.(?!\d)/g, ".\n");
+        emit("translateParagraph", input_ele.value);
+        caches.setInput(input_ele.value)
+      }, 500);
     }
     let w_id: number|undefined
     function handleSelect(e: Event) {
-      console.log("选中");
+      // console.log("选中le");
       clearTimeout(w_id);
       w_id = setTimeout(()=>{
         const target:HTMLTextAreaElement = e.target as HTMLTextAreaElement
       if(!target) return
       const seleted = target.value.substr(target.selectionStart,target.selectionEnd - target.selectionStart)
       emit("translateWord",seleted)
-      },800)
+      },0)
     }
+
+    onMounted(()=>{
+      input.value && (input.value.value = caches.getInput())
+    })
+
     return {
       input,
       growUp,
