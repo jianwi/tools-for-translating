@@ -1,0 +1,47 @@
+.wrap {
+    width:100%;
+    box-sizing: border-box;
+    border: solid 1px;
+    display: flex;
+    flex-direction: column;
+    padding: 3px;
+  }
+  textarea {
+    font-size: 16px;
+    resize: none;
+    width: 99%;
+    scrollbar-width: 1px;
+    height: 100%;
+    background-color: transparent;
+    margin: 0;
+    padding: 3px 0;
+    line-height: 20px;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    overflow: visible;
+  }
+  .btn-group{
+    margin: 2px 5px;
+    position: sticky;
+  }
+  button{
+    min-width: 80px;
+    height: 33px;
+    background: transparent;
+    border: 1px solid;
+    outline: none;
+  }
+  
+  ::-webkit-scrollbar
+  {
+      width: 2px;
+      background-color:transparent;
+  }
+
+  /*定义滑块 内阴影+圆角*/
+  ::-webkit-scrollbar-thumb
+  {
+      background-color: rgb(57, 218, 191);
+  }
+

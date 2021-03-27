@@ -1,5 +1,5 @@
 <template>
-  <header>Tool for translating (v2)</header>
+  <header>Tool for translating (v2.1)</header>
   <div class="input-wrap">
     <input-box
       @translateParagraph="handleTranslateParagraph"

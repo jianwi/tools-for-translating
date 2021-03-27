@@ -1,6 +1,6 @@
 export default async function en2ch(en: string):Promise<string> {
     let res = "";
-    const req = await fetch("http://f.jialidun.vip/t.php", {
+    const req = await fetch("https://f.jialidun.vip/t.php", {
       method: "POST",
       mode: "cors",
       headers: {
